@@ -59,10 +59,6 @@ jobs:
 
     - name: Validate current action
       run: |
-        if [ "${{fromJSON(steps.current.outputs.result).owner.isOrganisation}}" != "true" ]; then
-          echo "::error Repository owner isOrganisation does't equal to true"
-          exit 1
-        fi
         if [ "${{fromJSON(steps.current.outputs.result).fullName}}" != "${{github.repository}}" ]; then
           echo "::error Repository full name '${{fromJSON(steps.current.outputs.result).fullName}}' doesn't equal to expected '${{github.repository}}'"
           exit 1
