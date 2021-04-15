@@ -67,10 +67,6 @@ jobs:
           echo "::error Repository full name '${{fromJSON(steps.current.outputs.result).fullName}}' doesn't equal to expected '${{github.repository}}'"
           exit 1
         fi
-        if [ "${{fromJSON(steps.current.outputs.result).owner.login}}" != "${{github.repository_owner}}" ]; then
-          echo "::error Repository owner '${{fromJSON(steps.current.owner.login).fullName}}' doesn't equal to expected '${{github.repository_owner}}'"
-          exit 1
-        fi
 
 
     - name: Push back
