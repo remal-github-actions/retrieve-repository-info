@@ -1,2 +1,3 @@
-# template-typescript
-Template repository for GitHub typescript actions
+# retrieve-repository-info
+
+Retrieve GitHub repository info

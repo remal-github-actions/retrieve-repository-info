@@ -54,9 +54,27 @@ jobs:
 
 
     - name: Run current action
+      id: current
       uses: ./
-      with:
-        githubToken: ${{ secrets.PUSH_BACK_TOKEN }}
+
+    - name: Validate current action
+      run: |
+        if [ "${{fromJSON(jobs.current.outputs.result).owner.isUser}}" != "" ]; then
+          echo "::error Repository owner isUser does't equal to an empty string"
+          exit 1
+        fi
+        if [ "${{fromJSON(jobs.current.outputs.result).owner.isOrganisation}}" != "true" ]; then
+          echo "::error Repository owner isOrganisation does't equal to true"
+          exit 1
+        fi
+        if [ "${{fromJSON(jobs.current.outputs.result).fullName}}" != "${{github.repository}}" ]; then
+          echo "::error Repository full name '${{fromJSON(jobs.current.outputs.result).fullName}}' doesn't equal to expected '${{github.repository}}'"
+          exit 1
+        fi
+        if [ "${{fromJSON(jobs.current.outputs.result).owner.login}}" != "${{github.repository_owner}}" ]; then
+          echo "::error Repository owner '${{fromJSON(jobs.current.owner.login).fullName}}' doesn't equal to expected '${{github.repository_owner}}'"
+          exit 1
+        fi
 
 
     - name: Push back

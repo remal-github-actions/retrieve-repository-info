@@ -1,10 +1,19 @@
-name: Template action
-description: Template action description
+name: Retrieve repository info
+description: Retrieve GitHub repository info
 
 inputs:
+  repository:
+    required: true
+    default: '${{ github.repository }}'
+    description: GitHub repository fill name (owner/name)
   githubToken:
     required: true
+    default: '${{ github.token }}'
     description: GitHub access token with at least 'public_repo' (use 'repo' scope instead of 'public_repo' for private repositories)
+
+outputs:
+  result:
+    description: Repository info serialized as JSON
 
 runs:
   using: node12
