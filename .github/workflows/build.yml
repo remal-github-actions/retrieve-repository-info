@@ -59,6 +59,7 @@ jobs:
 
     - name: Validate current action
       run: |
+        echo ${{steps.current.outputs.result}}
         if [ "${{fromJSON(steps.current.outputs.result).owner.isUser}}" != "" ]; then
           echo "::error Repository owner isUser does't equal to an empty string"
           exit 1
