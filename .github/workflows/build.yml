@@ -59,7 +59,7 @@ jobs:
 
     - name: Validate current action
       run: |
-        echo "${{steps.current.outputs.result}}"
+        echo "${{fromJSON(steps.current.outputs.result).fullName}}"
 
 
     - name: Push back
