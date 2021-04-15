@@ -62,9 +62,21 @@ jobs:
         echo "${{toJSON(fromJSON(steps.current.outputs.result))}}"
 
     - name: Validate current action
+      env:
+        FULL_NAME: ${{fromJSON(steps.current.outputs.result).fullName}}
+        OWNER: ${{fromJSON(steps.current.outputs.result).owner.login}}
+        OWNER_IS_ORGANISATION: ${{fromJSON(steps.current.outputs.result).owner.isOrganisation}}
       run: |
-        if [ "${{fromJSON(steps.current.outputs.result).fullName}}" != "${{github.repository}}" ]; then
-          echo "::error Repository full name '${{fromJSON(steps.current.outputs.result).fullName}}' doesn't equal to expected '${{github.repository}}'"
+        if [ "$FULL_NAME" != "${{github.repository}}" ]; then
+          echo "::error Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
+          exit 1
+        fi
+        if [ "$OWNER_IS_ORGANISATION" != "true" ]; then
+          echo "::error Repository owner isOrganisation does't equal to true"
+          exit 1
+        fi
+        if [ "$OWNER" != "${{github.repository_owner}}" ]; then
+          echo "::error Repository owner '$OWNER' doesn't equal to expected '${{github.repository_owner}}'"
           exit 1
         fi
 
