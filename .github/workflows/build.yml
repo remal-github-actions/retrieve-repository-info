@@ -66,7 +66,7 @@ jobs:
         FULL_NAME: ${{fromJSON(steps.current.outputs.result).fullName}}
         OWNER: ${{fromJSON(steps.current.outputs.result).owner.login}}
         OWNER_IS_USER: ${{fromJSON(steps.current.outputs.result).owner.isUser}}
-        OWNER_IS_ORGANISATION: ${{fromJSON(steps.current.outputs.result).owner.isOrganisation}}
+        OWNER_IS_ORGANIZATION: ${{fromJSON(steps.current.outputs.result).owner.isOrganization}}
       run: |
         if [ "$FULL_NAME" != "${{github.repository}}" ]; then
           echo "::error Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
@@ -80,8 +80,8 @@ jobs:
           echo "::error Repository owner isUser is not empty"
           exit 1
         fi
-        if [ "$OWNER_IS_ORGANISATION" != "true" ]; then
-          echo "::error Repository owner isOrganisation does't equal to true"
+        if [ "$OWNER_IS_ORGANIZATION" != "true" ]; then
+          echo "::error Repository owner isOrganization does't equal to true"
           exit 1
         fi
 
