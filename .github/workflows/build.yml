@@ -57,6 +57,10 @@ jobs:
       id: current
       uses: ./
 
+    - name: Print result
+      run: |
+        echo "${{toJSON(fromJSON(steps.current.outputs.result))}}"
+
     - name: Validate current action
       run: |
         if [ "${{fromJSON(steps.current.outputs.result).fullName}}" != "${{github.repository}}" ]; then
