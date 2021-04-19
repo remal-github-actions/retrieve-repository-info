@@ -25,6 +25,15 @@ async function run(): Promise<void> {
         }).then(it => it.data)
 
         const repositoryInfo = extractInfo(repository)
+
+        if (repositoryInfo['topics'] == null) {
+            const allTopics = await octokit.repos.getAllTopics({
+                owner: repositoryOwner,
+                repo: repositoryName,
+            }).then(it => it.data.names)
+            repositoryInfo['topics'] = allTopics
+        }
+
         core.setOutput('result', JSON.stringify(repositoryInfo))
 
     } catch (error) {
