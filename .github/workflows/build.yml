@@ -66,16 +66,22 @@ jobs:
     - name: Validate current action
       env:
         FULL_NAME: ${{fromJSON(steps.current.outputs.result).fullName}}
-        OWNER: ${{fromJSON(steps.current.outputs.result).owner.login}}
+        OWNER_LOGIN: ${{fromJSON(steps.current.outputs.result).owner.login}}
+        OWNER_NAME: ${{fromJSON(steps.current.outputs.result).owner.name}}
         OWNER_IS_USER: ${{fromJSON(steps.current.outputs.result).owner.isUser}}
         OWNER_IS_ORGANIZATION: ${{fromJSON(steps.current.outputs.result).owner.isOrganization}}
+        LICENSE_DESCRIPTION: ${{fromJSON(steps.current.outputs.result).license.description}}
       run: |
         if [ "$FULL_NAME" != "${{github.repository}}" ]; then
           echo "::error Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
           exit 1
         fi
-        if [ "$OWNER" != "${{github.repository_owner}}" ]; then
-          echo "::error Repository owner '$OWNER' doesn't equal to expected '${{github.repository_owner}}'"
+        if [ "$OWNER_LOGIN" != "${{github.repository_owner}}" ]; then
+          echo "::error Repository owner '$OWNER_LOGIN' doesn't equal to expected '${{github.repository_owner}}'"
+          exit 1
+        fi
+        if [ "$OWNER_NAME" == "" ]; then
+          echo "::error Repository owner name is not set or empty"
           exit 1
         fi
         if [ "$OWNER_IS_USER" != "" ]; then
@@ -84,6 +90,10 @@ jobs:
         fi
         if [ "$OWNER_IS_ORGANIZATION" != "true" ]; then
           echo "::error Repository owner isOrganization does't equal to true"
+          exit 1
+        fi
+        if [ "$LICENSE_DESCRIPTION" == "" ]; then
+          echo "::error Repository license description is not set or empty"
           exit 1
         fi
 
