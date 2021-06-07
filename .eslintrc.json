@@ -25,6 +25,7 @@
     "semi": "off",
     "camelcase": "off",
     "no-unused-vars": "off",
+    "no-prototype-builtins": "off",
     "import/no-namespace": "off",
     "@typescript-eslint/semi": ["error", "never"],
     "github/no-then": "off",
