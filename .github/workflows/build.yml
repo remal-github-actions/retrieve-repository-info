@@ -58,8 +58,10 @@ jobs:
       uses: ./
 
     - name: Print result
+      env:
+        RESULT: ${{toJSON(fromJSON(steps.current.outputs.result))}}
       run: |
-        echo "${{toJSON(fromJSON(steps.current.outputs.result))}}"
+        echo "$RESULT"
 
     - name: Validate current action
       env:
