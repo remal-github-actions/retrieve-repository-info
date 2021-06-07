@@ -1,12 +1,7 @@
-import {components} from '@octokit/openapi-types/generated/types'
 import {snakeCaseToCamelCase} from './snakeCaseToCamelCase'
 
-type Repository = components["schemas"]["full-repository"]
-type RepositoryInfo = Record<string, any>
-
-export function extractInfo(repository: Repository): RepositoryInfo {
-    const repositoryInfo = extractObjectInfo(repository)
-    return repositoryInfo
+export function extractInfo(data: Record<string, any>): Record<string, any> {
+    return extractObjectInfo(data)
 }
 
 function extractObjectInfo(data: Record<string, any>): Record<string, any> {
