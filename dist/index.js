@@ -190,13 +190,11 @@ async function run() {
             repo: repositoryName,
         }).then(it => it.data);
         const repositoryInfo = extractInfo_1.extractInfo(repository);
-        if (repositoryInfo['owner'] != null && repositoryInfo['owner']['login'] != null) {
-            const user = await octokit.users.getByUsername({
-                username: repositoryInfo['owner']['login']
-            }).then(it => it.data);
-            const userInfo = extractInfo_1.extractInfo(user);
-            repositoryInfo['owner'] = userInfo;
-        }
+        const user = await octokit.users.getByUsername({
+            username: repositoryInfo['owner']['login']
+        }).then(it => it.data);
+        const userInfo = extractInfo_1.extractInfo(user);
+        repositoryInfo['owner'] = userInfo;
         if (repositoryInfo['organization'] != null && repositoryInfo['organization']['login'] != null) {
             const organization = await octokit.orgs.get({
                 org: repositoryInfo['organization']['login']
@@ -204,16 +202,12 @@ async function run() {
             const organizationInfo = extractInfo_1.extractInfo(organization);
             repositoryInfo['organization'] = organizationInfo;
         }
-        if (repositoryInfo['topics'] == null) {
-            const allTopics = await octokit.repos.getAllTopics({
-                owner: repositoryOwner,
-                repo: repositoryName,
-            }).then(it => it.data.names);
-            repositoryInfo['topics'] = allTopics;
-            if (repositoryInfo['topicsString'] == null) {
-                repositoryInfo['topicsString'] = repositoryInfo['topics'].join(',');
-            }
-        }
+        const allTopics = await octokit.repos.getAllTopics({
+            owner: repositoryOwner,
+            repo: repositoryName,
+        }).then(it => it.data.names);
+        repositoryInfo['topics'] = allTopics;
+        repositoryInfo['topicsString'] = repositoryInfo['topics'].join(',');
         if (repositoryInfo['license'] != null && repositoryInfo['license']['key'] != null) {
             const license = await octokit.licenses.get({
                 license: repositoryInfo['license']['key']
@@ -221,16 +215,12 @@ async function run() {
             const licenseInfo = extractInfo_1.extractInfo(license);
             repositoryInfo['license'] = licenseInfo;
         }
-        if (repositoryInfo['languages'] == null) {
-            const languages = await octokit.repos.listLanguages({
-                owner: repositoryOwner,
-                repo: repositoryName,
-            }).then(it => it.data);
-            repositoryInfo['languages'] = languages;
-            if (repositoryInfo['languagesString'] == null) {
-                repositoryInfo['languagesString'] = Object.keys(repositoryInfo['languages']).join(',');
-            }
-        }
+        const languages = await octokit.repos.listLanguages({
+            owner: repositoryOwner,
+            repo: repositoryName,
+        }).then(it => it.data);
+        repositoryInfo['languages'] = languages;
+        repositoryInfo['languagesString'] = Object.keys(repositoryInfo['languages']).join(',');
         core.setOutput('result', JSON.stringify(repositoryInfo));
     }
     catch (error) {
