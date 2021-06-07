@@ -190,6 +190,20 @@ async function run() {
             repo: repositoryName,
         }).then(it => it.data);
         const repositoryInfo = extractInfo_1.extractInfo(repository);
+        if (repositoryInfo['owner'] != null && repositoryInfo['owner']['login'] != null) {
+            const user = await octokit.users.getByUsername({
+                username: repositoryInfo['owner']['login']
+            }).then(it => it.data);
+            const userInfo = extractInfo_1.extractInfo(user);
+            repositoryInfo['owner'] = userInfo;
+        }
+        if (repositoryInfo['organization'] != null && repositoryInfo['organization']['login'] != null) {
+            const organization = await octokit.orgs.get({
+                org: repositoryInfo['organization']['login']
+            }).then(it => it.data);
+            const organizationInfo = extractInfo_1.extractInfo(organization);
+            repositoryInfo['organization'] = organizationInfo;
+        }
         if (repositoryInfo['topics'] == null) {
             const allTopics = await octokit.repos.getAllTopics({
                 owner: repositoryOwner,
