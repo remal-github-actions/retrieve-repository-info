@@ -2385,7 +2385,7 @@ exports.paginateRest = paginateRest;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-const VERSION = "1.0.3";
+const VERSION = "1.0.4";
 
 /**
  * @param octokit Octokit instance
@@ -3609,7 +3609,7 @@ async function wrapRequest(state, request, options) {
   return limiter.schedule(request, options);
 }
 
-const VERSION = "3.0.8";
+const VERSION = "3.0.9";
 function retry(octokit, octokitOptions) {
   const state = Object.assign({
     enabled: true,
@@ -3709,7 +3709,7 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-const VERSION = "3.4.2";
+const VERSION = "3.5.1";
 
 const noop = () => Promise.resolve(); // @ts-ignore
 
@@ -3720,8 +3720,11 @@ function wrapRequest(state, request, options) {
 
 async function doRequest(state, request, options) {
   const isWrite = options.method !== "GET" && options.method !== "HEAD";
-  const isSearch = options.method === "GET" && options.url.startsWith("/search/");
-  const isGraphQL = options.url.startsWith("/graphql");
+  const {
+    pathname
+  } = new URL(options.url, "http://github.test");
+  const isSearch = options.method === "GET" && pathname.startsWith("/search/");
+  const isGraphQL = pathname.startsWith("/graphql");
   const retryCount = ~~options.request.retryCount;
   const jobOptions = retryCount > 0 ? {
     priority: 0,
@@ -3742,7 +3745,7 @@ async function doRequest(state, request, options) {
   } // Guarantee at least 3000ms between requests that trigger notifications
 
 
-  if (isWrite && state.triggersNotification(options.url)) {
+  if (isWrite && state.triggersNotification(pathname)) {
     await state.notifications.key(state.id).schedule(jobOptions, noop);
   } // Guarantee at least 2000ms between search requests
 
@@ -3759,7 +3762,7 @@ async function doRequest(state, request, options) {
     if (res.data.errors != null && // @ts-ignore
     res.data.errors.some(error => error.type === "RATE_LIMITED")) {
       const error = Object.assign(new Error("GraphQL Rate Limit Exceeded"), {
-        headers: res.headers,
+        response: res,
         data: res.data
       });
       throw error;
@@ -3842,7 +3845,7 @@ function throttling(octokit, octokitOptions = {}) {
   } = octokitOptions.throttle || {};
 
   if (!enabled) {
-    return;
+    return {};
   }
 
   const common = {
@@ -3889,7 +3892,10 @@ function throttling(octokit, octokitOptions = {}) {
 
   state.retryLimiter.on("failed", async function (error, info) {
     const options = info.args[info.args.length - 1];
-    const shouldRetryGraphQL = options.url.startsWith("/graphql") && error.status !== 401;
+    const {
+      pathname
+    } = new URL(options.url, "http://github.test");
+    const shouldRetryGraphQL = pathname.startsWith("/graphql") && error.status !== 401;
 
     if (!(shouldRetryGraphQL || error.status === 403)) {
       return;
@@ -3906,7 +3912,7 @@ function throttling(octokit, octokitOptions = {}) {
         // https://docs.github.com/en/rest/overview/resources-in-the-rest-api#abuse-rate-limits
         // The Retry-After header can sometimes be blank when hitting an abuse limit,
         // but is always present after 2-3s, so make sure to set `retryAfter` to at least 5s by default.
-        const retryAfter = Math.max(~~error.headers["retry-after"], state.minimumAbuseRetryAfter);
+        const retryAfter = Math.max(~~error.response.headers["retry-after"], state.minimumAbuseRetryAfter);
         const wantRetry = await emitter.trigger("abuse-limit", retryAfter, options, octokit);
         return {
           wantRetry,
@@ -3914,11 +3920,11 @@ function throttling(octokit, octokitOptions = {}) {
         };
       }
 
-      if (error.headers != null && error.headers["x-ratelimit-remaining"] === "0") {
+      if (error.response.headers != null && error.response.headers["x-ratelimit-remaining"] === "0") {
         // The user has used all their allowed calls for the current time period (REST and GraphQL)
         // https://docs.github.com/en/rest/reference/rate-limit (REST)
         // https://docs.github.com/en/graphql/overview/resource-limitations#rate-limit (GraphQL)
-        const rateLimitReset = new Date(~~error.headers["x-ratelimit-reset"] * 1000).getTime();
+        const rateLimitReset = new Date(~~error.response.headers["x-ratelimit-reset"] * 1000).getTime();
         const retryAfter = Math.max(Math.ceil((rateLimitReset - Date.now()) / 1000), 0);
         const wantRetry = await emitter.trigger("rate-limit", retryAfter, options, octokit);
         return {
@@ -3937,6 +3943,7 @@ function throttling(octokit, octokitOptions = {}) {
     }
   });
   octokit.hook.wrap("request", wrapRequest.bind(null, state));
+  return {};
 }
 throttling.VERSION = VERSION;
 throttling.triggersNotification = triggersNotification;
@@ -8019,7 +8026,7 @@ module.exports = eval("require")("encoding");
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("assert");;
+module.exports = require("assert");
 
 /***/ }),
 
@@ -8027,7 +8034,7 @@ module.exports = require("assert");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("events");;
+module.exports = require("events");
 
 /***/ }),
 
@@ -8035,7 +8042,7 @@ module.exports = require("events");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("fs");;
+module.exports = require("fs");
 
 /***/ }),
 
@@ -8043,7 +8050,7 @@ module.exports = require("fs");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("http");;
+module.exports = require("http");
 
 /***/ }),
 
@@ -8051,7 +8058,7 @@ module.exports = require("http");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("https");;
+module.exports = require("https");
 
 /***/ }),
 
@@ -8059,7 +8066,7 @@ module.exports = require("https");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("net");;
+module.exports = require("net");
 
 /***/ }),
 
@@ -8067,7 +8074,7 @@ module.exports = require("net");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("os");;
+module.exports = require("os");
 
 /***/ }),
 
@@ -8075,7 +8082,7 @@ module.exports = require("os");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("path");;
+module.exports = require("path");
 
 /***/ }),
 
@@ -8083,7 +8090,7 @@ module.exports = require("path");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("stream");;
+module.exports = require("stream");
 
 /***/ }),
 
@@ -8091,7 +8098,7 @@ module.exports = require("stream");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("tls");;
+module.exports = require("tls");
 
 /***/ }),
 
@@ -8099,7 +8106,7 @@ module.exports = require("tls");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("url");;
+module.exports = require("url");
 
 /***/ }),
 
@@ -8107,7 +8114,7 @@ module.exports = require("url");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("util");;
+module.exports = require("util");
 
 /***/ }),
 
@@ -8115,7 +8122,7 @@ module.exports = require("util");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("zlib");;
+module.exports = require("zlib");
 
 /***/ })
 
@@ -8154,7 +8161,9 @@ module.exports = require("zlib");;
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
+/******/ 	
+/************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
