@@ -259,7 +259,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(2087));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
@@ -370,8 +370,8 @@ exports.getIDToken = exports.getState = exports.saveState = exports.group = expo
 const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
-const os = __importStar(__nccwpck_require__(2087));
-const path = __importStar(__nccwpck_require__(5622));
+const os = __importStar(__nccwpck_require__(2037));
+const path = __importStar(__nccwpck_require__(1017));
 const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
@@ -680,8 +680,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(5747));
-const os = __importStar(__nccwpck_require__(2087));
+const fs = __importStar(__nccwpck_require__(7147));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -838,8 +838,8 @@ exports.toCommandProperties = toCommandProperties;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Context = void 0;
-const fs_1 = __nccwpck_require__(5747);
-const os_1 = __nccwpck_require__(2087);
+const fs_1 = __nccwpck_require__(7147);
+const os_1 = __nccwpck_require__(2037);
 class Context {
     /**
      * Hydrate the context from the environment
@@ -1075,8 +1075,8 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(8605);
-const https = __nccwpck_require__(7211);
+const http = __nccwpck_require__(3685);
+const https = __nccwpck_require__(5687);
 const pm = __nccwpck_require__(6443);
 let tunnel;
 var HttpCodes;
@@ -6292,11 +6292,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var Stream = _interopDefault(__nccwpck_require__(2413));
-var http = _interopDefault(__nccwpck_require__(8605));
-var Url = _interopDefault(__nccwpck_require__(8835));
-var https = _interopDefault(__nccwpck_require__(7211));
-var zlib = _interopDefault(__nccwpck_require__(8761));
+var Stream = _interopDefault(__nccwpck_require__(2781));
+var http = _interopDefault(__nccwpck_require__(3685));
+var Url = _interopDefault(__nccwpck_require__(7310));
+var https = _interopDefault(__nccwpck_require__(5687));
+var zlib = _interopDefault(__nccwpck_require__(9796));
 
 // Based on https://github.com/tmpvar/jsdom/blob/aa85b2abf07766ff7bf5c1f6daafb3726f2f2db5/lib/jsdom/living/blob.js
 
@@ -6447,7 +6447,7 @@ FetchError.prototype.name = 'FetchError';
 
 let convert;
 try {
-	convert = __nccwpck_require__(2877).convert;
+	convert = (__nccwpck_require__(2877).convert);
 } catch (e) {}
 
 const INTERNALS = Symbol('Body internals');
@@ -7930,7 +7930,7 @@ fetch.Promise = global.Promise;
 
 module.exports = exports = fetch;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.default = exports;
+exports["default"] = exports;
 exports.Headers = Headers;
 exports.Request = Request;
 exports.Response = Response;
@@ -8002,13 +8002,13 @@ module.exports = __nccwpck_require__(4219);
 "use strict";
 
 
-var net = __nccwpck_require__(1631);
-var tls = __nccwpck_require__(4016);
-var http = __nccwpck_require__(8605);
-var https = __nccwpck_require__(7211);
-var events = __nccwpck_require__(8614);
-var assert = __nccwpck_require__(2357);
-var util = __nccwpck_require__(1669);
+var net = __nccwpck_require__(1808);
+var tls = __nccwpck_require__(4404);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var events = __nccwpck_require__(2361);
+var assert = __nccwpck_require__(9491);
+var util = __nccwpck_require__(3837);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -8350,7 +8350,7 @@ module.exports = eval("require")("encoding");
 
 /***/ }),
 
-/***/ 2357:
+/***/ 9491:
 /***/ ((module) => {
 
 "use strict";
@@ -8358,7 +8358,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 8614:
+/***/ 2361:
 /***/ ((module) => {
 
 "use strict";
@@ -8366,7 +8366,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 5747:
+/***/ 7147:
 /***/ ((module) => {
 
 "use strict";
@@ -8374,7 +8374,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 8605:
+/***/ 3685:
 /***/ ((module) => {
 
 "use strict";
@@ -8382,7 +8382,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 7211:
+/***/ 5687:
 /***/ ((module) => {
 
 "use strict";
@@ -8390,7 +8390,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 1631:
+/***/ 1808:
 /***/ ((module) => {
 
 "use strict";
@@ -8398,7 +8398,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 2087:
+/***/ 2037:
 /***/ ((module) => {
 
 "use strict";
@@ -8406,7 +8406,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 5622:
+/***/ 1017:
 /***/ ((module) => {
 
 "use strict";
@@ -8414,7 +8414,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 2413:
+/***/ 2781:
 /***/ ((module) => {
 
 "use strict";
@@ -8422,7 +8422,7 @@ module.exports = require("stream");
 
 /***/ }),
 
-/***/ 4016:
+/***/ 4404:
 /***/ ((module) => {
 
 "use strict";
@@ -8430,7 +8430,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 8835:
+/***/ 7310:
 /***/ ((module) => {
 
 "use strict";
@@ -8438,7 +8438,7 @@ module.exports = require("url");
 
 /***/ }),
 
-/***/ 1669:
+/***/ 3837:
 /***/ ((module) => {
 
 "use strict";
@@ -8446,7 +8446,7 @@ module.exports = require("util");
 
 /***/ }),
 
-/***/ 8761:
+/***/ 9796:
 /***/ ((module) => {
 
 "use strict";
