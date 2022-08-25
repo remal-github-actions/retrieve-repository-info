@@ -225,7 +225,7 @@ async function run() {
         core.setOutput('result', JSON.stringify(repositoryInfo));
     }
     catch (error) {
-        core.setFailed(error);
+        core.setFailed(error instanceof Error ? error : error.toString());
     }
 }
 run();
