@@ -53,6 +53,9 @@ jobs:
         npm run build
 
 
+    # $$$sync-with-template-modifiable: validation $$$
+
+
     - name: Run current action
       id: current
       uses: ./
@@ -73,29 +76,32 @@ jobs:
         LICENSE_DESCRIPTION: ${{fromJSON(steps.current.outputs.result).license.description}}
       run: |
         if [ "$FULL_NAME" != "${{github.repository}}" ]; then
-          echo "::error Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
+          echo "::error::Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
           exit 1
         fi
         if [ "$OWNER_LOGIN" != "${{github.repository_owner}}" ]; then
-          echo "::error Repository owner '$OWNER_LOGIN' doesn't equal to expected '${{github.repository_owner}}'"
+          echo "::error::Repository owner '$OWNER_LOGIN' doesn't equal to expected '${{github.repository_owner}}'"
           exit 1
         fi
         if [ "$OWNER_NAME" == "" ]; then
-          echo "::error Repository owner name is not set or empty"
+          echo "::error::Repository owner name is not set or empty"
           exit 1
         fi
         if [ "$OWNER_IS_USER" != "" ]; then
-          echo "::error Repository owner isUser is not empty"
+          echo "::error::Repository owner isUser is not empty"
           exit 1
         fi
         if [ "$OWNER_IS_ORGANIZATION" != "true" ]; then
-          echo "::error Repository owner isOrganization does't equal to true"
+          echo "::error::Repository owner isOrganization does't equal to true"
           exit 1
         fi
         if [ "$LICENSE_DESCRIPTION" == "" ]; then
-          echo "::error Repository license description is not set or empty"
+          echo "::error::Repository license description is not set or empty"
           exit 1
         fi
+
+
+    # $$$sync-with-template-modifiable-end$$$
 
 
     - name: Push back
