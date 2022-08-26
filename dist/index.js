@@ -19,7 +19,7 @@ function extractObjectInfo(data) {
         if (value == null) {
             return;
         }
-        const mappedKey = snakeCaseToCamelCase_1.snakeCaseToCamelCase(key);
+        const mappedKey = (0, snakeCaseToCamelCase_1.snakeCaseToCamelCase)(key);
         const mappedValue = extractAnyInfo(value);
         info[mappedKey] = mappedValue;
         if (mappedKey === 'type' && typeof mappedValue === 'string') {
@@ -55,7 +55,11 @@ function extractAnyInfo(data) {
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -91,7 +95,7 @@ const OctokitWithPlugins = utils_1.GitHub
 });
 function newOctokitInstance(token) {
     var _a;
-    const baseOptions = utils_1.getOctokitOptions(token);
+    const baseOptions = (0, utils_1.getOctokitOptions)(token);
     const throttleOptions = {
         throttle: {
             onRateLimit: (retryAfter, options) => {
@@ -152,7 +156,11 @@ exports.snakeCaseToCamelCase = snakeCaseToCamelCase;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -185,22 +193,22 @@ async function run() {
         }
         const repositoryOwner = repositoryFillNameMatch[1];
         const repositoryName = repositoryFillNameMatch[2];
-        const octokit = octokit_1.newOctokitInstance(githubToken);
+        const octokit = (0, octokit_1.newOctokitInstance)(githubToken);
         const repository = await octokit.repos.get({
             owner: repositoryOwner,
             repo: repositoryName,
         }).then(it => it.data);
-        const repositoryInfo = extractInfo_1.extractInfo(repository);
+        const repositoryInfo = (0, extractInfo_1.extractInfo)(repository);
         const user = await octokit.users.getByUsername({
             username: repositoryInfo['owner']['login']
         }).then(it => it.data);
-        const userInfo = extractInfo_1.extractInfo(user);
+        const userInfo = (0, extractInfo_1.extractInfo)(user);
         repositoryInfo['owner'] = userInfo;
         if (repositoryInfo['organization'] != null && repositoryInfo['organization']['login'] != null) {
             const organization = await octokit.orgs.get({
                 org: repositoryInfo['organization']['login']
             }).then(it => it.data);
-            const organizationInfo = extractInfo_1.extractInfo(organization);
+            const organizationInfo = (0, extractInfo_1.extractInfo)(organization);
             repositoryInfo['organization'] = organizationInfo;
         }
         const allTopics = await octokit.repos.getAllTopics({
@@ -213,7 +221,7 @@ async function run() {
             const license = await octokit.licenses.get({
                 license: repositoryInfo['license']['key']
             }).then(it => it.data);
-            const licenseInfo = extractInfo_1.extractInfo(license);
+            const licenseInfo = (0, extractInfo_1.extractInfo)(license);
             repositoryInfo['license'] = licenseInfo;
         }
         const languages = await octokit.repos.listLanguages({
