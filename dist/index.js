@@ -94,7 +94,6 @@ const OctokitWithPlugins = utils_1.GitHub
     ]
 });
 function newOctokitInstance(token) {
-    var _a, _b;
     const baseOptions = (0, utils_1.getOctokitOptions)(token);
     const throttleOptions = {
         throttle: {
@@ -116,8 +115,7 @@ function newOctokitInstance(token) {
         }
     };
     const logOptions = {};
-    if (((_a = process.env.RUNNER_DEBUG) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === 'true'
-        || ((_b = process.env.ACTIONS_STEP_DEBUG) === null || _b === void 0 ? void 0 : _b.toLowerCase()) === 'true') {
+    if (core.isDebug()) {
         logOptions.log = __nccwpck_require__(1033)({ level: 'trace' });
     }
     const allOptions = {
