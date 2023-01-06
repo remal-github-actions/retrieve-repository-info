@@ -102,6 +102,7 @@ jobs:
         OWNER_IS_USER: ${{fromJSON(steps.current.outputs.result).owner.isUser}}
         OWNER_IS_ORGANIZATION: ${{fromJSON(steps.current.outputs.result).owner.isOrganization}}
         LICENSE_DESCRIPTION: ${{fromJSON(steps.current.outputs.result).license.description}}
+        IS_TEMPLATE: ${{fromJSON(steps.current.outputs.result).isTemplate}}
       run: |
         if [ "$FULL_NAME" != "${{github.repository}}" ]; then
           echo "::error::Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
@@ -125,6 +126,10 @@ jobs:
         fi
         if [ "$LICENSE_DESCRIPTION" == "" ]; then
           echo "::error::Repository license description is not set or empty"
+          exit 1
+        fi
+        if [ "$IS_TEMPLATE" != "false" ]; then
+          echo "::error::Repository isTemplate does't equal to false"
           exit 1
         fi
 
