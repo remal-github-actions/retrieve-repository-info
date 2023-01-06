@@ -84,7 +84,6 @@ jobs:
 
     # $$$sync-with-template-modifiable: validation $$$
 
-
     - name: Run current action
       id: current
       uses: ./
@@ -128,7 +127,6 @@ jobs:
           echo "::error::Repository license description is not set or empty"
           exit 1
         fi
-
 
     # $$$sync-with-template-modifiable-end$$$
 
