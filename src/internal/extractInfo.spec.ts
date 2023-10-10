@@ -1,4 +1,4 @@
-import {components} from '@octokit/openapi-types/generated/types'
+import type {components} from '@octokit/openapi-types'
 import {extractInfo} from './extractInfo'
 
 describe('extractInfo', () => {
