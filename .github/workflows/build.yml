@@ -88,19 +88,19 @@ jobs:
 
     - name: Print result
       env:
-        RESULT: ${{toJSON(fromJSON(steps.current.outputs.result))}}
+        RESULT: ${{toJSON(fromJSON(steps.current.outputs.result || '{}'))}}
       run: |
         echo "$RESULT"
 
     - name: Validate current action
       env:
-        FULL_NAME: ${{fromJSON(steps.current.outputs.result).fullName}}
-        OWNER_LOGIN: ${{fromJSON(steps.current.outputs.result).owner.login}}
-        OWNER_NAME: ${{fromJSON(steps.current.outputs.result).owner.name}}
-        OWNER_IS_USER: ${{fromJSON(steps.current.outputs.result).owner.isUser}}
-        OWNER_IS_ORGANIZATION: ${{fromJSON(steps.current.outputs.result).owner.isOrganization}}
-        LICENSE_DESCRIPTION: ${{fromJSON(steps.current.outputs.result).license.description}}
-        IS_TEMPLATE: ${{fromJSON(steps.current.outputs.result).isTemplate}}
+        FULL_NAME: ${{fromJSON(steps.current.outputs.result || '{}').fullName}}
+        OWNER_LOGIN: ${{fromJSON(steps.current.outputs.result || '{}').owner.login}}
+        OWNER_NAME: ${{fromJSON(steps.current.outputs.result || '{}').owner.name}}
+        OWNER_IS_USER: ${{fromJSON(steps.current.outputs.result || '{}').owner.isUser}}
+        OWNER_IS_ORGANIZATION: ${{fromJSON(steps.current.outputs.result || '{}').owner.isOrganization}}
+        LICENSE_DESCRIPTION: ${{fromJSON(steps.current.outputs.result || '{}').license.description}}
+        IS_TEMPLATE: ${{fromJSON(steps.current.outputs.result || '{}').isTemplate}}
       run: |
         if [ "$FULL_NAME" != "${{github.repository}}" ]; then
           echo "::error::Repository full name '$FULL_NAME' doesn't equal to expected '${{github.repository}}'"
