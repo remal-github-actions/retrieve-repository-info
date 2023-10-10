@@ -85,6 +85,7 @@ describe('extractInfo', () => {
         "has_projects": false,
         "has_downloads": true,
         "has_wiki": false,
+        "has_discussions": false,
         "has_pages": false,
         "forks_count": 0,
         "mirror_url": null,
