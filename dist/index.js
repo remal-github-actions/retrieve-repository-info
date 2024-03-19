@@ -1,251 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 999:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.extractInfo = void 0;
-const snakeCaseToCamelCase_1 = __nccwpck_require__(3725);
-function extractInfo(data) {
-    return extractObjectInfo(data);
-}
-exports.extractInfo = extractInfo;
-function extractObjectInfo(data) {
-    const info = {};
-    Object.entries(data).forEach(([key, value]) => {
-        if (value == null) {
-            return;
-        }
-        const mappedKey = (0, snakeCaseToCamelCase_1.snakeCaseToCamelCase)(key);
-        const mappedValue = extractAnyInfo(value);
-        info[mappedKey] = mappedValue;
-        if (mappedKey === 'type' && typeof mappedValue === 'string') {
-            const boolKey = `is${mappedValue.substr(0, 1).toUpperCase()}${mappedValue.substr(1)}`;
-            if (info[boolKey] == null) {
-                info[boolKey] = true;
-            }
-        }
-    });
-    return info;
-}
-function extractAnyInfo(data) {
-    if (Array.isArray(data)) {
-        return data
-            .filter(item => item != null)
-            .map(extractAnyInfo);
-    }
-    else if (typeof data === 'object') {
-        return extractObjectInfo(data);
-    }
-    else {
-        return data;
-    }
-}
-
-
-/***/ }),
-
-/***/ 8093:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.newOctokitInstance = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-const utils_1 = __nccwpck_require__(3030);
-const plugin_request_log_1 = __nccwpck_require__(8883);
-const plugin_retry_1 = __nccwpck_require__(6298);
-const plugin_throttling_1 = __nccwpck_require__(9968);
-const OctokitWithPlugins = utils_1.GitHub
-    .plugin(plugin_retry_1.retry)
-    .plugin(plugin_throttling_1.throttling)
-    .plugin(plugin_request_log_1.requestLog)
-    .defaults({
-    previews: [
-        'baptiste',
-        'mercy',
-    ],
-});
-function newOctokitInstance(token) {
-    const baseOptions = (0, utils_1.getOctokitOptions)(token);
-    const throttleOptions = {
-        throttle: {
-            onRateLimit: (retryAfter, options) => {
-                const retryCount = options.request.retryCount;
-                const retryLogInfo = retryCount === 0 ? '' : ` (retry #${retryCount})`;
-                core.debug(`Request quota exhausted for request ${options.method} ${options.url}${retryLogInfo}`);
-                return retryCount <= 4;
-            },
-            onSecondaryRateLimit: (retryAfter, options) => {
-                core.error(`Abuse detected for request ${options.method} ${options.url}`);
-                return false;
-            },
-        },
-    };
-    const retryOptions = {
-        retry: {
-            doNotRetry: ['429'],
-        },
-    };
-    const logOptions = {};
-    const traceLogging = __nccwpck_require__(385)({ level: 'trace' });
-    if (core.isDebug()) {
-        logOptions.log = traceLogging;
-    }
-    const allOptions = {
-        ...baseOptions,
-        ...throttleOptions,
-        ...retryOptions,
-        ...logOptions,
-    };
-    const octokit = new OctokitWithPlugins(allOptions);
-    const client = {
-        ...octokit.rest,
-        paginate: octokit.paginate,
-    };
-    return client;
-}
-exports.newOctokitInstance = newOctokitInstance;
-
-
-/***/ }),
-
-/***/ 3725:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.snakeCaseToCamelCase = void 0;
-function snakeCaseToCamelCase(str) {
-    return str.replace(/_([a-z])/g, $1 => $1.toUpperCase())
-        .replace(/_+/g, '');
-}
-exports.snakeCaseToCamelCase = snakeCaseToCamelCase;
-
-
-/***/ }),
-
-/***/ 9538:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
-const extractInfo_1 = __nccwpck_require__(999);
-const octokit_1 = __nccwpck_require__(8093);
-async function run() {
-    try {
-        const repositoryFullName = core.getInput('repository', { required: true });
-        const githubToken = core.getInput('githubToken', { required: true });
-        core.setSecret(githubToken);
-        const repositoryFillNameRegex = /^([^/]+)\/([^/]+)$/;
-        const repositoryFillNameMatch = repositoryFullName.match(repositoryFillNameRegex);
-        if (repositoryFillNameMatch == null) {
-            throw new Error(`Repository full name '${repositoryFullName}' doesn't match to ${repositoryFillNameRegex}`);
-        }
-        const repositoryOwner = repositoryFillNameMatch[1];
-        const repositoryName = repositoryFillNameMatch[2];
-        const octokit = (0, octokit_1.newOctokitInstance)(githubToken);
-        const repository = await octokit.repos.get({
-            owner: repositoryOwner,
-            repo: repositoryName,
-        }).then(it => it.data);
-        const repositoryInfo = (0, extractInfo_1.extractInfo)(repository);
-        const user = await octokit.users.getByUsername({
-            username: repositoryInfo['owner']['login']
-        }).then(it => it.data);
-        const userInfo = (0, extractInfo_1.extractInfo)(user);
-        repositoryInfo['owner'] = userInfo;
-        if (repositoryInfo['organization'] != null && repositoryInfo['organization']['login'] != null) {
-            const organization = await octokit.orgs.get({
-                org: repositoryInfo['organization']['login']
-            }).then(it => it.data);
-            const organizationInfo = (0, extractInfo_1.extractInfo)(organization);
-            repositoryInfo['organization'] = organizationInfo;
-        }
-        const allTopics = await octokit.repos.getAllTopics({
-            owner: repositoryOwner,
-            repo: repositoryName,
-        }).then(it => it.data.names);
-        repositoryInfo['topics'] = allTopics;
-        repositoryInfo['topicsString'] = repositoryInfo['topics'].join(',');
-        if (repositoryInfo['license'] != null && repositoryInfo['license']['key'] != null) {
-            const license = await octokit.licenses.get({
-                license: repositoryInfo['license']['key']
-            }).then(it => it.data);
-            const licenseInfo = (0, extractInfo_1.extractInfo)(license);
-            repositoryInfo['license'] = licenseInfo;
-        }
-        const languages = await octokit.repos.listLanguages({
-            owner: repositoryOwner,
-            repo: repositoryName,
-        }).then(it => it.data);
-        repositoryInfo['languages'] = languages;
-        repositoryInfo['languagesString'] = Object.keys(repositoryInfo['languages']).join(',');
-        core.setOutput('result', JSON.stringify(repositoryInfo));
-    }
-    catch (error) {
-        core.setFailed(error instanceof Error ? error : error.toString());
-        throw error;
-    }
-}
-run();
-
-
-/***/ }),
-
 /***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -33384,17 +33139,201 @@ module.exports = require("zlib");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(9538);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+;// CONCATENATED MODULE: ./build/internal/snakeCaseToCamelCase.js
+function snakeCaseToCamelCase(str) {
+    return str.replace(/_([a-z])/g, $1 => $1.toUpperCase())
+        .replace(/_+/g, '');
+}
+
+;// CONCATENATED MODULE: ./build/internal/extractInfo.js
+
+function extractInfo(data) {
+    return extractObjectInfo(data);
+}
+function extractObjectInfo(data) {
+    const info = {};
+    Object.entries(data).forEach(([key, value]) => {
+        if (value == null) {
+            return;
+        }
+        const mappedKey = snakeCaseToCamelCase(key);
+        const mappedValue = extractAnyInfo(value);
+        info[mappedKey] = mappedValue;
+        if (mappedKey === 'type' && typeof mappedValue === 'string') {
+            const boolKey = `is${mappedValue.substr(0, 1).toUpperCase()}${mappedValue.substr(1)}`;
+            if (info[boolKey] == null) {
+                info[boolKey] = true;
+            }
+        }
+    });
+    return info;
+}
+function extractAnyInfo(data) {
+    if (Array.isArray(data)) {
+        return data
+            .filter(item => item != null)
+            .map(extractAnyInfo);
+    }
+    else if (typeof data === 'object') {
+        return extractObjectInfo(data);
+    }
+    else {
+        return data;
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/utils.js
+var utils = __nccwpck_require__(3030);
+// EXTERNAL MODULE: ./node_modules/@octokit/plugin-request-log/dist-node/index.js
+var dist_node = __nccwpck_require__(8883);
+// EXTERNAL MODULE: ./node_modules/@octokit/plugin-retry/dist-node/index.js
+var plugin_retry_dist_node = __nccwpck_require__(6298);
+// EXTERNAL MODULE: ./node_modules/@octokit/plugin-throttling/dist-node/index.js
+var plugin_throttling_dist_node = __nccwpck_require__(9968);
+;// CONCATENATED MODULE: ./build/internal/octokit.js
+
+
+
+
+
+const OctokitWithPlugins = utils.GitHub.plugin(plugin_retry_dist_node.retry)
+    .plugin(plugin_throttling_dist_node.throttling)
+    .plugin(dist_node.requestLog)
+    .defaults({
+    previews: [
+        'baptiste',
+        'mercy',
+    ],
+});
+function newOctokitInstance(token) {
+    const baseOptions = (0,utils.getOctokitOptions)(token);
+    const throttleOptions = {
+        throttle: {
+            onRateLimit: (retryAfter, options) => {
+                const retryCount = options.request.retryCount;
+                const retryLogInfo = retryCount === 0 ? '' : ` (retry #${retryCount})`;
+                core.debug(`Request quota exhausted for request ${options.method} ${options.url}${retryLogInfo}`);
+                return retryCount <= 4;
+            },
+            onSecondaryRateLimit: (retryAfter, options) => {
+                core.error(`Abuse detected for request ${options.method} ${options.url}`);
+                return false;
+            },
+        },
+    };
+    const retryOptions = {
+        retry: {
+            doNotRetry: ['429'],
+        },
+    };
+    const logOptions = {};
+    const traceLogging = __nccwpck_require__(385)({ level: 'trace' });
+    if (core.isDebug()) {
+        logOptions.log = traceLogging;
+    }
+    const allOptions = {
+        ...baseOptions,
+        ...throttleOptions,
+        ...retryOptions,
+        ...logOptions,
+    };
+    const octokit = new OctokitWithPlugins(allOptions);
+    const client = {
+        ...octokit.rest,
+        paginate: octokit.paginate,
+    };
+    return client;
+}
+
+;// CONCATENATED MODULE: ./build/main.js
+
+
+
+async function run() {
+    try {
+        const repositoryFullName = core.getInput('repository', { required: true });
+        const githubToken = core.getInput('githubToken', { required: true });
+        core.setSecret(githubToken);
+        const repositoryFillNameRegex = /^([^/]+)\/([^/]+)$/;
+        const repositoryFillNameMatch = repositoryFullName.match(repositoryFillNameRegex);
+        if (repositoryFillNameMatch == null) {
+            throw new Error(`Repository full name '${repositoryFullName}' doesn't match to ${repositoryFillNameRegex}`);
+        }
+        const repositoryOwner = repositoryFillNameMatch[1];
+        const repositoryName = repositoryFillNameMatch[2];
+        const octokit = newOctokitInstance(githubToken);
+        const repository = await octokit.repos.get({
+            owner: repositoryOwner,
+            repo: repositoryName,
+        }).then(it => it.data);
+        const repositoryInfo = extractInfo(repository);
+        const user = await octokit.users.getByUsername({
+            username: repositoryInfo['owner']['login']
+        }).then(it => it.data);
+        const userInfo = extractInfo(user);
+        repositoryInfo['owner'] = userInfo;
+        if (repositoryInfo['organization'] != null && repositoryInfo['organization']['login'] != null) {
+            const organization = await octokit.orgs.get({
+                org: repositoryInfo['organization']['login']
+            }).then(it => it.data);
+            const organizationInfo = extractInfo(organization);
+            repositoryInfo['organization'] = organizationInfo;
+        }
+        const allTopics = await octokit.repos.getAllTopics({
+            owner: repositoryOwner,
+            repo: repositoryName,
+        }).then(it => it.data.names);
+        repositoryInfo['topics'] = allTopics;
+        repositoryInfo['topicsString'] = repositoryInfo['topics'].join(',');
+        if (repositoryInfo['license'] != null && repositoryInfo['license']['key'] != null) {
+            const license = await octokit.licenses.get({
+                license: repositoryInfo['license']['key']
+            }).then(it => it.data);
+            const licenseInfo = extractInfo(license);
+            repositoryInfo['license'] = licenseInfo;
+        }
+        const languages = await octokit.repos.listLanguages({
+            owner: repositoryOwner,
+            repo: repositoryName,
+        }).then(it => it.data);
+        repositoryInfo['languages'] = languages;
+        repositoryInfo['languagesString'] = Object.keys(repositoryInfo['languages']).join(',');
+        core.setOutput('result', JSON.stringify(repositoryInfo));
+    }
+    catch (error) {
+        core.setFailed(error instanceof Error ? error : error.toString());
+        throw error;
+    }
+}
+run();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
