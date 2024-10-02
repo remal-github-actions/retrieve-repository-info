@@ -33227,6 +33227,8 @@ function extractAnyInfo(data) {
     }
 }
 
+// EXTERNAL MODULE: ./node_modules/console-log-level/index.js
+var console_log_level = __nccwpck_require__(9653);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/utils.js
 var utils = __nccwpck_require__(8006);
 ;// CONCATENATED MODULE: ./node_modules/@octokit/plugin-request-log/dist-src/version.js
@@ -33387,6 +33389,7 @@ var dist_node = __nccwpck_require__(4759);
 
 
 
+
 const OctokitWithPlugins = utils.GitHub
     .plugin(retry)
     .plugin(dist_node.throttling)
@@ -33425,7 +33428,7 @@ function newOctokitInstance(token) {
         },
     };
     const logOptions = {};
-    const traceLogging = __nccwpck_require__(9653)({ level: 'trace' });
+    const traceLogging = console_log_level({ level: 'trace' });
     if (core.isDebug()) {
         logOptions.log = traceLogging;
     }
