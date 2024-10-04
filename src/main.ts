@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import {extractInfo} from './internal/extractInfo'
-import {newOctokitInstance} from './internal/octokit'
+import {extractInfo} from './internal/extractInfo.js'
+import {newOctokitInstance} from './internal/octokit.js'
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 

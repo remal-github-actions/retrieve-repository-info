@@ -1,4 +1,4 @@
-import {snakeCaseToCamelCase} from './snakeCaseToCamelCase'
+import {snakeCaseToCamelCase} from './snakeCaseToCamelCase.js'
 
 export function extractInfo(data: Record<string, any>): Record<string, any> {
     return extractObjectInfo(data)

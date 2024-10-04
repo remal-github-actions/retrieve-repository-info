@@ -1,4 +1,4 @@
-import {snakeCaseToCamelCase} from './snakeCaseToCamelCase'
+import {snakeCaseToCamelCase} from './snakeCaseToCamelCase.js'
 
 describe('snakeCaseToCamelCase', () => {
 
